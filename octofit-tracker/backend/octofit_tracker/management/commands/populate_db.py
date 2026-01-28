@@ -10,14 +10,27 @@ import random
 
 
 class Command(BaseCommand):
-    help = 'Populate the OctoFit Tracker database with initial data'
+    help = 'Populate the octofit_db database with test data'
 
     def handle(self, *args, **options):
+        # Clear existing data
+        self.stdout.write('Clearing existing data...')
+        User.objects.all().delete()
+        UserProfile.objects.all().delete()
+        Activity.objects.all().delete()
+        Team.objects.all().delete()
+        TeamMembership.objects.all().delete()
+        Leaderboard.objects.all().delete()
+        LeaderboardEntry.objects.all().delete()
+        Workout.objects.all().delete()
+        WorkoutPlan.objects.all().delete()
+        WorkoutPlanDay.objects.all().delete()
+        
         self.stdout.write('Starting database population...')
         
-        # Create sample users
-        users = self.create_users()
-        self.stdout.write(self.style.SUCCESS(f'✓ Created {len(users)} users'))
+        # Create sample users (Superheroes)
+        users = self.create_superhero_users()
+        self.stdout.write(self.style.SUCCESS(f'✓ Created {len(users)} superhero users'))
         
         # Create user profiles
         profiles = self.create_user_profiles(users)
@@ -31,8 +44,8 @@ class Command(BaseCommand):
         workouts = self.create_workouts()
         self.stdout.write(self.style.SUCCESS(f'✓ Created {len(workouts)} workout templates'))
         
-        # Create teams and memberships
-        teams = self.create_teams(users)
+        # Create teams (Marvel and DC)
+        teams = self.create_superhero_teams(users)
         self.stdout.write(self.style.SUCCESS(f'✓ Created {len(teams)} teams'))
         
         # Create leaderboards
@@ -45,19 +58,23 @@ class Command(BaseCommand):
         
         self.stdout.write(self.style.SUCCESS('\n✓ Database population completed successfully!'))
 
-    def create_users(self):
-        """Create sample users"""
-        users_data = [
-            {'username': 'john_runner', 'email': 'john@octofit.com', 'first_name': 'John', 'last_name': 'Runner'},
-            {'username': 'sarah_cyclist', 'email': 'sarah@octofit.com', 'first_name': 'Sarah', 'last_name': 'Cyclist'},
-            {'username': 'mike_swimmer', 'email': 'mike@octofit.com', 'first_name': 'Mike', 'last_name': 'Swimmer'},
-            {'username': 'emma_yogi', 'email': 'emma@octofit.com', 'first_name': 'Emma', 'last_name': 'Yogi'},
-            {'username': 'alex_trainer', 'email': 'alex@octofit.com', 'first_name': 'Alex', 'last_name': 'Trainer'},
-            {'username': 'lisa_hiker', 'email': 'lisa@octofit.com', 'first_name': 'Lisa', 'last_name': 'Hiker'},
+    def create_superhero_users(self):
+        """Create sample superhero users"""
+        superhero_data = [
+            # Marvel Heroes
+            {'username': 'iron_man', 'email': 'tony@marvel.com', 'first_name': 'Tony', 'last_name': 'Stark'},
+            {'username': 'captain_america', 'email': 'steve@marvel.com', 'first_name': 'Steve', 'last_name': 'Rogers'},
+            {'username': 'spider_man', 'email': 'peter@marvel.com', 'first_name': 'Peter', 'last_name': 'Parker'},
+            {'username': 'black_widow', 'email': 'natasha@marvel.com', 'first_name': 'Natasha', 'last_name': 'Romanoff'},
+            # DC Heroes
+            {'username': 'batman', 'email': 'bruce@dc.com', 'first_name': 'Bruce', 'last_name': 'Wayne'},
+            {'username': 'superman', 'email': 'clark@dc.com', 'first_name': 'Clark', 'last_name': 'Kent'},
+            {'username': 'wonder_woman', 'email': 'diana@dc.com', 'first_name': 'Diana', 'last_name': 'Prince'},
+            {'username': 'the_flash', 'email': 'barry@dc.com', 'first_name': 'Barry', 'last_name': 'Allen'},
         ]
         
         users = []
-        for user_data in users_data:
+        for user_data in superhero_data:
             user, created = User.objects.get_or_create(
                 username=user_data['username'],
                 defaults={
@@ -196,12 +213,11 @@ class Command(BaseCommand):
         
         return workouts
 
-    def create_teams(self, users):
-        """Create sample teams"""
+    def create_superhero_teams(self, users):
+        """Create Marvel and DC teams"""
         teams_data = [
-            {'name': 'Morning Runners', 'owner': users[0], 'description': 'Early birds who love running'},
-            {'name': 'Cycling Club', 'owner': users[1], 'description': 'Passionate cyclists'},
-            {'name': 'Fitness Warriors', 'owner': users[4], 'description': 'Strength and fitness enthusiasts'},
+            {'name': 'marvel', 'owner': users[0], 'description': 'Marvel Universe Superheroes'},
+            {'name': 'dc', 'owner': users[4], 'description': 'DC Universe Superheroes'},
         ]
         
         teams = []
@@ -214,10 +230,15 @@ class Command(BaseCommand):
                 }
             )
             
-            # Add team members
+            # Add team members based on universe
             if created:
-                for member in random.sample(users, k=random.randint(2, 4)):
-                    role = 'owner' if member == team.owner else random.choice(['admin', 'member'])
+                if team.name == 'marvel':
+                    team_members = users[0:4]  # Iron Man, Captain America, Spider-Man, Black Widow
+                else:  # dc
+                    team_members = users[4:8]  # Batman, Superman, Wonder Woman, The Flash
+                
+                for member in team_members:
+                    role = 'owner' if member == team.owner else 'member'
                     TeamMembership.objects.get_or_create(
                         team=team,
                         user=member,
