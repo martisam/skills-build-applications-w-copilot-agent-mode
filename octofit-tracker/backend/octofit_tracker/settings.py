@@ -1,5 +1,5 @@
 """
-Django settings for octofit_tracker_core project.
+Django settings for octofit_tracker project.
 """
 
 from pathlib import Path
@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'octofit_tracker_core.urls'
+ROOT_URLCONF = 'octofit_tracker.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'octofit_tracker_core.wsgi.application'
+WSGI_APPLICATION = 'octofit_tracker.wsgi.application'
 
 
 # Database

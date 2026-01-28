@@ -1,5 +1,5 @@
 """
-URL configuration for octofit_tracker_core project.
+URL configuration for octofit_tracker project.
 """
 from django.contrib import admin
 from django.urls import path, include
