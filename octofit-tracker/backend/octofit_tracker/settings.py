@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djongo',
     'rest_framework',
     'corsheaders',
     'django_filters',
@@ -77,7 +78,7 @@ WSGI_APPLICATION = 'octofit_tracker.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'octofit_tracker_db',
+        'NAME': 'octofit_db',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
             'host': 'localhost',
