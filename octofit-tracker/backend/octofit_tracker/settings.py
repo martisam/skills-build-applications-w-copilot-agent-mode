@@ -15,7 +15,16 @@ SECRET_KEY = 'django-insecure-a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
+# Allow localhost, 127.0.0.1, and GitHub Codespace URLs
+CODESPACE_NAME = os.getenv('CODESPACE_NAME', '')
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '*',
+]
+if CODESPACE_NAME:
+    ALLOWED_HOSTS.append(f'{CODESPACE_NAME}-8000.app.github.dev')
+    ALLOWED_HOSTS.append(CODESPACE_NAME)
 
 
 # Application definition
@@ -161,6 +170,13 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
 ]
+if CODESPACE_NAME:
+    CORS_ALLOWED_ORIGINS.extend([
+        f"https://{CODESPACE_NAME}-8000.app.github.dev",
+        f"https://{CODESPACE_NAME}-3000.app.github.dev",
+    ])
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 # dj-rest-auth Configuration
 

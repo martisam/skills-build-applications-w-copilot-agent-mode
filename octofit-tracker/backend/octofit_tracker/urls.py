@@ -6,6 +6,7 @@ from django.urls import path, include
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+import os
 
 
 class APIRootView(APIView):
@@ -13,6 +14,12 @@ class APIRootView(APIView):
     API root endpoint that lists all available endpoints
     """
     def get(self, request, format=None):
+        # Determine the base URL for the response
+        if request.is_secure() or 'app.github.dev' in request.get_host():
+            base_url = f"https://{request.get_host()}"
+        else:
+            base_url = f"{request.scheme}://{request.get_host()}"
+        
         return Response({
             'message': 'Welcome to OctoFit Tracker API',
             'version': '1.0.0',
@@ -31,7 +38,8 @@ class APIRootView(APIView):
                 'api/teams/': 'Team management and leaderboards',
                 'api/workouts/': 'Workout templates and plans',
                 'api/auth/': 'Authentication endpoints',
-            }
+            },
+            'base_url': base_url
         })
 
 
