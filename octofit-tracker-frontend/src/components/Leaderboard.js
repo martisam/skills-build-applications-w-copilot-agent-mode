@@ -174,13 +174,3 @@ const Leaderboard = () => {
 };
 
 export default Leaderboard;
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default Leaderboard;
