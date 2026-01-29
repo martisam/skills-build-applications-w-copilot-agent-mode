@@ -12,9 +12,9 @@ const Leaderboard = () => {
         
         let apiUrl;
         if (codespaceNameEnv) {
-          apiUrl = `https://${codespaceNameEnv}-8000.app.github.dev/api/teams/`;
+          apiUrl = `https://${codespaceNameEnv}-8000.app.github.dev/api/leaderboard/`;
         } else {
-          apiUrl = `http://localhost:8000/api/teams/`;
+          apiUrl = `http://localhost:8000/api/leaderboard/`;
         }
 
         console.log('Fetching Leaderboards from:', apiUrl);
